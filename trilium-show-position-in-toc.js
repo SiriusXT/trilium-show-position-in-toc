@@ -38,7 +38,7 @@ var scrollFunc = function(event) {
 	}
 	var mouseY = event.clientY;
 	var minh = 100000;
-	var minhi = "";
+	var minhi = 100000;
 	for (var i = 0; i < heading.length; i += 1) {
 		var objY = parseInt(mouseY) - parseInt(heading[i].getBoundingClientRect()
 			.top);
@@ -47,7 +47,6 @@ var scrollFunc = function(event) {
 			minhi = i;
 		}
 	}
-
 	var li = document.querySelectorAll("div.toc-widget span.toc li");
 	for (var i = 0; i < li.length; i += 1) {
 		if (i != minhi) {
