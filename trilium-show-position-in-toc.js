@@ -1,7 +1,7 @@
  /*
 trilium-show-position-in-toc
 https://github.com/SiriusXT/trilium-show-position-in-toc
-version:0.3
+version:0.4
 */
 
 class ShowTocPosition extends api.NoteContextAwareWidget {
@@ -13,20 +13,37 @@ class ShowTocPosition extends api.NoteContextAwareWidget {
     }
     doRender() {
         this.$widget = $(`<style type="text/css">
-        .component.scrolling-container .note-detail-editable-text-editor.ck.ck-content{
+        .component.scrolling-container .ck.ck-content{
         overflow: visible;
         }
-        </style>`);
+        </style>
+        `);
         return this.$widget;
+
     }
 
     async refreshWithNote() {
         this.showTocPosition();
     }
     showTocPosition() {
+        let listenScroll = true;
+        var toogleTimeout;
+        function toggleFalse(){
+            clearTimeout(toogleTimeout);
+            listenScroll = false;
+            toogleTimeout = setTimeout(function () {
+                listenScroll = true;
+            },1500);
+        };
+        function toggleTrue(){
+            clearTimeout(toogleTimeout);
+            listenScroll = true;
+        };
         const noteContext = this.noteContext;
         $(document).ready(async function () {
             setTimeout(async function () { // Wait for scroll-container and toc to load
+                $("#right-pane").off("click", toggleFalse);
+                $("#right-pane").on("click", toggleFalse);
                 var getNoteContainer = async function () {
                     const isReadOnly = await noteContext.isReadOnly();
                     if (isReadOnly) {
@@ -37,10 +54,11 @@ class ShowTocPosition extends api.NoteContextAwareWidget {
                     }
                 }
                 var $scrollingContainer = (await getNoteContainer()).closest('.component.scrolling-container');
+                //window.scrollingContainer=$scrollingContainer
                 var scrollHandlerTimeout;
                 var scrollHandler = async function (event = undefined) {
                     clearTimeout(scrollHandlerTimeout);
-                    scrollHandlerTimeout=setTimeout(async function () {
+                    scrollHandlerTimeout = setTimeout(async function () {
                         let headerIndex = -1;
                         (await getNoteContainer()).find(':header').each(function () {
                             headerIndex++;
@@ -59,14 +77,16 @@ class ShowTocPosition extends api.NoteContextAwareWidget {
                             } else {
                                 li[i].style.setProperty("color", '#C70039');
                                 //Don't scroll toc when mouse is over toc
-                                li[i].scrollIntoView({
+                                if (listenScroll) {
+                                    li[i].scrollIntoView({
                                         block: "center",
                                         behavior: "instant"
-                                });
+                                    });
+                                }
 
                             }
                         }
-                    },500);
+                    }, 10);
                 };
 
                 if ($scrollingContainer.length > 0) {
@@ -81,4 +101,3 @@ class ShowTocPosition extends api.NoteContextAwareWidget {
 }
 
 module.exports = new ShowTocPosition();
-
