@@ -1,7 +1,7 @@
  /*
 trilium-show-position-in-toc
 https://github.com/SiriusXT/trilium-show-position-in-toc
-version:0.4
+version:0.5
 */
 
 class ShowTocPosition extends api.NoteContextAwareWidget {
@@ -10,6 +10,10 @@ class ShowTocPosition extends api.NoteContextAwareWidget {
     }
     get parentWidget() {
         return 'center-pane';
+    }
+    isEnabled() {
+        return super.isEnabled()
+            && this.note.type === 'text';
     }
     doRender() {
         this.$widget = $(`<style type="text/css">
@@ -101,3 +105,4 @@ class ShowTocPosition extends api.NoteContextAwareWidget {
 }
 
 module.exports = new ShowTocPosition();
+
