@@ -53,7 +53,7 @@ module.exports = class extends api.NoteContextAwareWidget {
         clearTimeout(this.scrollHandlerTimeout);
 
         this.scrollHandlerTimeout = setTimeout(() => {
-            const headers = this.scrollingContainer.querySelectorAll(':not(section.include-note) h1, :not(section.include-note) h2, :not(section.include-note) h3, :not(section.include-note) h4, :not(section.include-note) h5, :not(section.include-note) h6');
+            const headers = this.scrollingContainer.querySelectorAll(':not(section.include-note) h2, :not(section.include-note) h3, :not(section.include-note) h4, :not(section.include-note) h5, :not(section.include-note) h6');
 
             let headerIndex = -1;
 
