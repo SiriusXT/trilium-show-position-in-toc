@@ -1,8 +1,20 @@
+
 /*
 trilium-show-position-in-toc
 https://github.com/SiriusXT/trilium-show-position-in-toc
-version:0.6
+version:0.7
 */
+
+const styleContent = `
+.toc li.in-view {
+	color: rgb(199, 0, 57) !important; 
+    /*box-shadow: inset 0 2px 10px color-mix(in srgb, currentColor 40%, transparent);*/
+}`;
+
+const styleElement = document.createElement('style');
+styleElement.innerHTML = styleContent;
+document.head.appendChild(styleElement);
+
 
 let centerPane, rightPane;
 
@@ -63,13 +75,13 @@ module.exports = class extends api.NoteContextAwareWidget {
     }
 
     tocScrollTo(headerIndex) {
-        const liElements = this.rightPane.querySelectorAll("div.toc-widget span.toc li");
+        const liElements = this.rightPane.querySelectorAll("span.toc li");
 
         liElements.forEach((li, index) => {
             if (index !== headerIndex) {
-                li.style.color = '';
+                li.classList.remove('in-view');
             } else {
-                li.style.color = '#C70039';
+                li.classList.add('in-view');
                 // Don't scroll toc when mouse is over toc
                 const card = this.rightPane.querySelector('.toc-widget')?.parentElement;
                 if (!this.disableTocScroll || (card && card.scrollHeight > card.clientHeight)) {
@@ -87,13 +99,12 @@ module.exports = class extends api.NoteContextAwareWidget {
         this.disableTocScroll = true;
         this.dLTimeout = setTimeout(() => {
             this.disableTocScroll = false;
-        }, 300);
+        }, 1000);
     }
 
 
     async refreshWithNote() {
         this.scrollingContainer = this.centerPane.querySelector(`.note-split[data-ntx-id="${this.noteContext.ntxId}"]`).querySelector('.scrolling-container');
-
 
         this.scrollingContainer?.removeEventListener('scroll', this.scrollHandler);
         this.scrollingContainer?.addEventListener('scroll', this.scrollHandler);
