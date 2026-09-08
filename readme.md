@@ -1,3 +1,5 @@
+### This Widget has been integrated into Trilium and is now archived.
+---
 Mark font red  of the position being browsed in the Table of contents.
 ## version: 0.7 for trilium > 0.101.0
 ## Installation
